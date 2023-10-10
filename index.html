@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/7/75/Whatsapp_logo_svg.png" type="image/x-icon">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Whatsapp</title>
+</head>
+<body>
+
+    <div id="app" class="m-auto d-flex">
+
+        <aside class="d-flex flex-column">
+
+            <nav class="py-2 px-2 d-flex justify-content-between">
+
+                <div class="d-flex">
+                    <img src="./img/avatar_9.jpg"alt=""> 
+                    <p class="owner pt-2 mx-1 font-weight-bold">Simona</p>
+                </div>
+
+
+                <div class="d-flex">
+                    <a href="#"><i class="fa-solid fa-circle-notch" class="mx-4" style="color: #c0c0c0;"></i></a>
+                    <a href="#"><i class="fa-solid fa-message" class="mx-4" style="color: #c0c0c0;"></i></a>
+                    <a href="#"><i class="fa-solid fa-ellipsis-vertical" class="mx-4" style="color: #c0c0c0;"></i></a>
+                </div>
+
+            </nav>
+
+                
+
+                <div class="li-blue py-2 px-2 d-flex">
+                    <i class="fa-solid fa-bell-slash" class="p-3"style="color: #8EDAFC;"></i>
+                    <div class="d-flex flex-column pt-2">
+                        <span>Ricevi notifiche di nuovi messaggi</span>
+                        <span> <a class="text-secondary" href="#">Attiva notifiche Desktop</a> </span>
+                    </div>
+                </div>
+
+                <div class="addcontact px-3 py-1">
+                    <i @click="addNewElement" class="fa-solid fa-plus" style="color: #808080;"></i>
+                    <i  class="fa-solid fa-magnifying-glass" style="color: #808080;"></i>
+                    <input @keyup.enter="selectContact" v-model="searchedWord" class="py-2 px-2 my-1"placeholder="Cerca o inizia una nuova chat">
+                    <label v-for="contact in filterWords(contact, text)">{{ contact.name }}</label>
+                </div>
+
+
+
+            <ul>
+                <li @click="changeIndex(index)" class="px-2 py-2 "v-for="(contact, index) in contacts"
+                :key="contact.name" :class=" activeIndex===index ? 'selected' : '' ">
+
+                    <img :src="contact.avatar" :key="contact.avatar" class="mx-2">
+
+                    {{ contact.name }}
+                </li>
+            </ul>
+
+        </aside>
+
+
+        <div class="main-content">
+
+            <nav class="py-2 px-2 d-flex justify-content-between">
+
+                <div class="d-flex  mx-2">
+
+                    <!--THIS PART IS THE TOP VISUAL OF THE CURRENT ACTIVE CONTACT-->
+                    <div @click="changeIndex(index)">
+                        <img :src="contacts[activeIndex].avatar" alt="contact.name + 'avatar" class="mx-2"> 
+                    </div>
+
+                    <div>
+                        <p class="owner pt-2 mx-1 font-weight-normal">{{ contacts[activeIndex].name }}</p>
+                    </div>
+                </div>
+
+
+                <div class="d-flex">
+                    <a href="#"><i class="fa-solid fa-magnifying-glass" class="mx-4" style="color: #c0c0c0;"></i></a>
+                    <a href="#"><i class="fa-solid fa-paperclip" class="mx-4"style="color: #c0c0c0;"></i></a>
+                    <a href="#"><i class="fa-solid fa-ellipsis-vertical" class="mx-4" style="color: #c0c0c0;"></i></a>
+                </div>             
+            </nav>
+
+            <!--THIS PART IS THE ACTIVE CONVERSATION-->
+
+            <div class="conversation clearfix d-flex flex-column px-2">
+                
+                        <div class="text sent my-4" v-for="(text, index) in contacts[activeIndex].messages"
+                        :class="(text.status=='sent' ? 'sent' : 'received' )">
+                        {{ text.message }}
+                        </div>
+
+            </div>
+
+
+            <footer class="d-flex justify-content-around py-3 align-items-center">
+                <a href="#"><i class="fa-regular fa-face-smile" style="color: #808080;"></i></a>
+                <input type="text" v-model="newMessage.message" @keyup.enter="addMessage(newMessage)" name="text-area" id="text-area" class="py-2 px-3"placeholder="Scrivi un messaggio">
+                <a href="#"><i class="fa-solid fa-microphone" style="color: #808080;"></i></a>
+            </footer>
+        </div>
+
+        <!--Here it ends up-->
+
+
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="./myscript.js/myscript.js"></script>
+</body>
+</html>
+
+<!--Milestone 1
+Replica della grafica con la possibilità di avere messaggi scritti dall’utente (verdi) e dall’interlocutore (bianco) assegnando due classi CSS diverse
+Visualizzazione dinamica della lista contatti: tramite la direttiva v-for, visualizzare nome e immagine di ogni contatto
+-->
