@@ -1,4 +1,4 @@
-const{createApp}=Vue;
+const { createApp } = Vue;
 
 createApp({
     data() {
@@ -6,21 +6,20 @@ createApp({
 
         return {
 
-            
             newMessage: {
-                message:'',
+                message: '',
                 status: 'sent',
             },
-            
+
             messageReceived: {
-                message:'Ok, sono felice per te :)',
+                message: 'Ok, sono felice per te :)',
                 status: 'received',
-                
+
             },
-            
+
             selectedContact: null,
             searchedWord: '',
-            
+
 
             contacts: [
                 {
@@ -186,16 +185,16 @@ createApp({
                 }
             ],
             activeIndex: 0,
-            
+
 
         }
     },
     methods: {
 
-        
+
         addNewElement() {
 
-            let newElement={
+            let newElement = {
                 name: 'Dennis',
                 avatar: './img/avatar_dennis.jpg',
                 visible: true,
@@ -216,36 +215,52 @@ createApp({
                         status: 'received'
                     }
                 ]
-                };
-        this.contacts.push(newElement);
+            };
+            this.contacts.push(newElement);
         },
 
         changeIndex(index) {
-            this.activeIndex=index;
+            this.activeIndex = index;
         },
 
-        receiveMessage(messageReceived){
+        receiveMessage(messageReceived) {
             this.contacts[this.activeIndex].messages.push(this.messageReceived);
         },
 
-        addMessage(newMessage) {
-            if (this.newMessage.message !== '') {
-                this.contacts[this.activeIndex].messages.push(this.newMessage);
-                let timeTimer= setTimeout(this.receiveMessage, 1000);
-
-            } else{
-                alert('Type a message')
+        addMessage(newMessage, activeIndex) {
+            if (newMessage.message === '' || newMessage.message === undefined) {
+                alert('Type a message');
+                console.log(newMessage.messages);
+            } else {
+                this.contacts[activeIndex].messages.push(newMessage);
+                let timeTimer = setTimeout(() => {
+                    this.contacts[activeIndex].messages.push({ message: 'Ok', status: 'received' });
+                }, 1000);
+                this.newMessage = ''; // Svuota solo il campo "message"
             }
         },
-        filterWords(contact, text) {
+
+        filterWords() {
             return this.contacts.filter(contact =>
-            contact.name.toLowerCase().includes(this.searchedWord.toLowerCase())
-            )},
+                contact.name.toLowerCase().includes(this.searchedWord.toLowerCase())
+            );
+        },
+
+        searchChat() {
+            for (let i = 0; i < this.contacts.length; i++) {
+                if (this.contacts[i].name.toLowerCase().includes(this.searchedWord.toLowerCase())) {
+                    this.contacts[i].visible = true;
+                } else {
+                    this.contacts[i].visible = false;
+                }
+            }
+        },
+
 
         selectContact(contact) {
-                this.activeIndex=this.searchedWord;
-                
-            }
+            this.activeIndex = this.searchedWord;
 
+        }
 
-}}).mount('#app');
+    }
+}).mount('#app');
