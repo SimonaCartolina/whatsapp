@@ -6,19 +6,16 @@ createApp({
 
         return {
 
-            newMessage: {
-                message: '',
-                status: 'sent',
-            },
+            showConfirm: [],
+            showDeleteButton: [],
+            messageToDeleteIndex: null,
 
-            messageReceived: {
-                message: 'Ok, sono felice per te :)',
-                status: 'received',
-
-            },
 
             selectedContact: null,
             searchedWord: '',
+            newMessage: "",
+            lastAccessTime: "",
+            targetDelete: "",
 
 
             contacts: [
@@ -195,7 +192,7 @@ createApp({
         addNewElement() {
 
             let newElement = {
-                name: 'Dennis',
+                name: 'Marco',
                 avatar: './img/avatar_dennis.jpg',
                 visible: true,
                 messages: [
@@ -227,40 +224,62 @@ createApp({
             this.contacts[this.activeIndex].messages.push(this.messageReceived);
         },
 
-        addMessage(newMessage, activeIndex) {
-            if (newMessage.message === '' || newMessage.message === undefined) {
-                alert('Type a message');
-                console.log(newMessage.messages);
-            } else {
-                this.contacts[activeIndex].messages.push(newMessage);
-                let timeTimer = setTimeout(() => {
-                    this.contacts[activeIndex].messages.push({ message: 'Ok', status: 'received' });
-                }, 1000);
-                this.newMessage = ''; // Svuota solo il campo "message"
+        addMessage(newMessage) {
+            console.log(newMessage);
+            this.contacts[this.activeIndex].messages.push({ message: this.newMessage, status: 'sent' });
+            this.targetDelete = "";
+            this.newMessage = "";
+            setTimeout(() => {
+                this.contacts[this.activeIndex].messages.push({
+                    message: "ok",
+                    status: "received",
+                });
+            }, 1000);
+            this.lastAccess();
+        },
+
+        filterContacts(contact) {
+            if (
+                contact.name
+                    .toUpperCase()
+                    .startsWith(this.searchedWord.toUpperCase()) ||
+                this.searchedWord === ""
+            ) {
+                return true;
             }
+            return false;
         },
-
-        filterWords() {
-            return this.contacts.filter(contact =>
-                contact.name.toLowerCase().includes(this.searchedWord.toLowerCase())
-            );
-        },
-
-        searchChat() {
-            for (let i = 0; i < this.contacts.length; i++) {
-                if (this.contacts[i].name.toLowerCase().includes(this.searchedWord.toLowerCase())) {
-                    this.contacts[i].visible = true;
-                } else {
-                    this.contacts[i].visible = false;
-                }
-            }
-        },
-
 
         selectContact(contact) {
             this.activeIndex = this.searchedWord;
+        },
+        changeContactChat(index) {
+            this.contact.activeIndex = index;
+            this.targetDelete = "";
+        },
 
-        }
+        toggleDeleteButton(index) {
+            // Imposta l'indice del messaggio da eliminare
+            this.messageToDeleteIndex = index;
+            // Abilita il messaggio di conferma
+            this.showConfirm[index] = true;
+        },
+        deleteConfirmed(index) {
+            // Elimina il messaggio confermato
+            this.contacts[this.activeIndex].messages.splice(index, 1);
+            // Nasconde il messaggio di conferma
+            this.showConfirm[index] = false;
+        },
+        cancelDelete(index) {
+            // Annulla l'azione di eliminazione
+            this.showConfirm[index] = false;
+        },
+        deleteMessage(index) {
+            // Abilita il pulsante "Elimina" per il messaggio
+            this.showDeleteButton[index] = true;
+        },
+
 
     }
-}).mount('#app');
+})
+    .mount('#app');
